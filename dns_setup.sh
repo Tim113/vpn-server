@@ -24,7 +24,7 @@ docker run -d \
     -e TZ=GB
     -e ServerIP="${IP}" \
     --restart=unless-stopped \
-    --dns=1.1.1.1 --dns=8.8.8.8 \
+    --dns=176.103.130.130 --dns=176.103.130.131 \
     pihole/pihole:latest
 
 
