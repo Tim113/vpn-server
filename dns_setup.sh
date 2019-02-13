@@ -14,6 +14,7 @@ echo -e "### Make sure your IPs are correct, hard code ServerIP ENV VARs if nece
 # Environment variables for docker can be defined in --env-file .env file
 docker run -d \
     --name pihole \
+    --env-file .env \
     -p 53:53/tcp -p 53:53/udp \
     -p 80:80 \
     -p 443:443 \
