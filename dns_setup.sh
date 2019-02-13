@@ -21,6 +21,7 @@ docker run -d \
     --cap-add=NET_ADMIN \
     -v "${DOCKER_CONFIGS}/pihole/:/etc/pihole/" \
     -v "${DOCKER_CONFIGS}/dnsmasq.d/:/etc/dnsmasq.d/" \
+    -e TZ=GB
     -e ServerIP="${IP}" \
     --restart=unless-stopped \
     --dns=1.1.1.1 --dns=8.8.8.8 \
