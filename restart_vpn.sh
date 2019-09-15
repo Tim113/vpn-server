@@ -1,7 +1,7 @@
 # source the envs
 . ./envs.sh
 
-docker rm -f $OVPN_CONTAINER_NAME 
+docker rm -f $OVPN_CONTAINER_NAME
 
 # Start the OVPN service
 docker run \
@@ -9,7 +9,9 @@ docker run \
     --publish $OVPN_PORT:1194/udp \
     --network=$OVPN_NETWORK \
 	--log-driver=none \
+	--cap-add=NET_ADMIN \
     --name=$OVPN_CONTAINER_NAME \
-    --cap-add=NET_ADMIN kylemanna/openvpn 
+	kylemanna/openvpn 
 
 
+docker ps
