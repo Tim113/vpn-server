@@ -22,7 +22,6 @@ docker run \
 
 # First fix the ran file issue if it has not been fixed:
 # https://github.com/angristan/openvpn-install/issues/454#issue-473796843
-
 docker run \
     -e EASYRSA_KEY_SIZE=4096 \
     -v $OVPN_DATA:/etc/openvpn \
@@ -30,12 +29,4 @@ docker run \
     --log-driver=none --rm \
     -it kylemanna/openvpn ovpn_initpki
 
-# Start the OVPN service
-docker run \
-    -v $OVPN_DATA:/etc/openvpn -d \
-    --publish $OVPN_PORT:1194/udp \
-    --network=$OVPN_NETWORK \
-    --log-driver=none \
-    --name=$OVPN_CONTAINER_NAME \
-    --cap-add=NET_ADMIN kylemanna/openvpn 
-
+. ./restart_vpn.sh
