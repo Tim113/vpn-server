@@ -1,12 +1,15 @@
-# Name the dock volumne with the CA
-OVPN_DATA="ovpn-data-main"
+# source the envs
+. ./envs.sh
 
-docker rm -f ovpn-main 
+docker rm -f $OVPN_CONTAINER_NAME 
 
 # Start the OVPN service
 docker run \
-	-v $OVPN_DATA:/etc/openvpn -d -p \
-	1194:1194/udp \
-	--name ovpn-main \
-	--cap-add=NET_ADMIN kylemanna/openvpn
+    -v $OVPN_DATA:/etc/openvpn -d \
+    --publish $OVPN_PORT:1194/udp \
+    --network=$OVPN_NETWORK \
+	--log-driver=none \
+    --name=$OVPN_CONTAINER_NAME \
+    --cap-add=NET_ADMIN kylemanna/openvpn 
+
 

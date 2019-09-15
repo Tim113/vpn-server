@@ -1,11 +1,5 @@
-# Name the dock volumne with the CA
-TOP_LEVEL_NAME="basis"
-OVPN_DATA="ovpn-data-basis"
-OVPN_NETWORK="ovpn-basis"
-OVPN_PORT=1195
-OVPN_SERVER_NAME="vpn.thj113.com"I
-OVPN_DNS=167.99.211.211
-CERT_NAME='tim_oneplus6'
+# source the envs
+. ./envs.sh
 
 # Create the clinat cert 
 docker run \
