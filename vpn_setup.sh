@@ -1,24 +1,14 @@
 # source the envs
 . ./envs.sh
 
-# Create the network that will be used to 
-sudo docker network create $OVPN_NETWORK
-
-# Create the docker volumne
-docker volume create --name $OVPN_DATA
-
-# Add the files needed to run the ovpn servace into the docker voumne
 ######### Need to check what the VPN.SERVERNAME.COM sould be
-docker run \
-    -e OVPN_DNS_SERVERS=$OVPN_DNS \
-    -e OVPN_DNS='1' \
-    -v $OVPN_DATA:/etc/openvpn \
-    --log-driver=none \
-    --network=$OVPN_NETWORK \
-    --rm kylemanna/openvpn ovpn_genconfig \
+docker-compose run \
+    --rm ovpn ovpn_genconfig \
+    -u udp://
     -C 'AES-256-CBC' \
     -a 'SHA384' \
     -u udp://$OVPN_SERVER_NAME
+
 
 # First fix the ran file issue if it has not been fixed:
 # https://github.com/angristan/openvpn-install/issues/454#issue-473796843
