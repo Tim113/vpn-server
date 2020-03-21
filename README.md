@@ -26,3 +26,17 @@ docker-compose run --rm openvpn easyrsa build-client-full $CLIENTNAME
 docker-compose run --rm openvpn ovpn_getclient $CLIENTNAME > $CLIENTNAME.ovpn
 
 ```
+
+# Settings in the cert
+Once the cert has been made you want to add some more setting to it so that it will force all of the trafic to the pi hole.  Add the voloowing lines to the file.
+
+Note that you may or may not what the `192.168.0.0` to be allowed through depending on your local network.  Also the DNS is set to the fixed local ip of the docker image running pi hole. 
+
+```
+# Allow local traffic to connect without vpn
+route 192.168.0.0 255.255.0.0 net_gateway
+
+# Force the trafic to my dns
+dhcp-option DNS 10.5.0.4
+block-outside-dns
+```
