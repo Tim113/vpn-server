@@ -1,0 +1,83 @@
+version: '3'
+services:
+
+  dns-tls-1:
+    restart: always
+    image: qmcgaw/cloudflare-dns-server
+    container_name: dns-tls-1
+    environment:
+      - VERBOSITY=0
+      - VERBOSITY_DETAILS=0
+      - BLOCK_MALICIOUS=off
+      - LISTENINGPORT=53
+      - PROVIDERS=cloudflare,google
+      - CACHING=off
+    networks:
+      dnsbridge:
+        ipv4_address: 10.5.0.2
+
+  dns-tls-2:
+    restart: always
+    image: qmcgaw/cloudflare-dns-server
+    container_name: dns-tls-2
+    environment:
+      - VERBOSITY=0
+      - VERBOSITY_DETAILS=0
+      - BLOCK_MALICIOUS=off
+      - LISTENINGPORT=53
+      - PROVIDERS=cloudflare,google
+      - CACHING=off
+    networks:
+      dnsbridge:
+        ipv4_address: 10.5.0.3
+
+
+  pihole:
+    image: pihole/pihole
+    dns:
+      - 127.0.0.1
+      - 192.168.1.1
+    ports:
+      # - "53:53/tcp"
+      # - "53:53/udp"
+      - "80:80/tcp"
+      - "443:443/tcp"
+    cap_add:
+      - NET_ADMIN
+    networks:
+      dnsbridge:
+        ipv4_address: 10.5.0.4
+    environment:
+      ServerIP: 192.168.1.13
+      TZ: Europe/London
+      DNS1: 10.5.0.2
+      DNS2: 10.5.0.3
+    volumes:
+      - '/etc/pihole/:/etc/pihole/'
+      - '/etc/dnsmasq.d/:/etc/dnsmasq.d/'
+    restart: always
+
+
+    openvpn:
+      cap_add:
+       - NET_ADMIN
+      image: local/ovpn
+      container_name: ovpn
+      environment: 
+        EASYRSA_KEY_SIZE: 4096
+      ports:
+       - "1194:1194/udp"
+      restart: always
+      volumes:
+       - ./openvpn-data/conf:/etc/openvpn
+
+
+logs:
+  driver: none
+
+networks:
+  dnsbridge:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.5.0.0/16
