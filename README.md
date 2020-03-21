@@ -13,6 +13,16 @@ docker-compose run --rm openvpn ovpn_initpki
 
 Start everthing up
 ```
-docker-compose up -d openvpn
+docker-compose up -d
+```
+
+Make a cert for the user:
+```
+export CLIENTNAME="your_client_name"
+# with a passphrase (recommended)
+docker-compose run --rm openvpn easyrsa build-client-full $CLIENTNAME
+
+# Get the file back out of the image
+docker-compose run --rm openvpn ovpn_getclient $CLIENTNAME > $CLIENTNAME.ovpn
 
 ```
