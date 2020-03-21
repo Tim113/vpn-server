@@ -38,10 +38,10 @@ services:
       - 127.0.0.1
       - 192.168.1.1
     ports:
-      # - "53:53/tcp"
-      # - "53:53/udp"
       - "80:80/tcp"
       - "443:443/tcp"
+      # - "53:53/tcp"
+      # - "53:53/udp"
     cap_add:
       - NET_ADMIN
     networks:
@@ -53,27 +53,25 @@ services:
       DNS1: 10.5.0.2
       DNS2: 10.5.0.3
     volumes:
-      - '/etc/pihole/:/etc/pihole/'
-      - '/etc/dnsmasq.d/:/etc/dnsmasq.d/'
+      - 'etc_pihole:/etc/pihole/'
+      - 'etc_dnsmasq:/etc/dnsmasq.d/'
     restart: always
 
 
-    openvpn:
-      cap_add:
-       - NET_ADMIN
-      image: local/ovpn
-      container_name: ovpn
-      environment: 
-        EASYRSA_KEY_SIZE: 4096
-      ports:
-       - "1194:1194/udp"
-      restart: always
-      volumes:
-       - ./openvpn-data/conf:/etc/openvpn
-
-
-logs:
-  driver: none
+  openvpn:
+    cap_add:
+      - NET_ADMIN
+    image: local/ovpn
+    container_name: ovpn
+    environment: 
+      EASYRSA_KEY_SIZE: 4096
+    ports:
+      - "1194:1194/udp"
+    restart: always
+    volumes:
+      - ./openvpn-data/conf:/etc/openvpn
+    logging: 
+      driver: none
 
 networks:
   dnsbridge:
@@ -81,3 +79,7 @@ networks:
     ipam:
      config:
        - subnet: 10.5.0.0/16
+
+volumes: 
+  etc_pihole: {}
+  etc_dnsmasq: {}
