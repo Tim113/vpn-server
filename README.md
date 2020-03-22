@@ -7,7 +7,7 @@ Steps:
 Inintalise the Ovpn contaner 
 ```
 export SERVERNAME=server.com
-docker-compose run --rm openvpn ovpn_genconfig -u udp://$SERVERNAME  -C 'AES-256-CBC' -a 'SHA384'
+docker-compose run --rm openvpn ovpn_genconfig -u udp://$SERVERNAME -n 10.5.0.4 -C 'AES-256-CBC' -a 'SHA384'
 docker-compose run --rm openvpn ovpn_initpki
 ```
 
