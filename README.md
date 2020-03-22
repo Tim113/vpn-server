@@ -1,4 +1,3 @@
-docker-compose run --rm openvpn ovpn_genconfig -u udp://VPN.SERVERNAME.COM
 # vpn-server
 Scripts for creating a server running https://github.com/kylemanna/docker-openvpn
 
@@ -7,7 +6,8 @@ The supported way of running this is with docker-compose.
 Steps:
 Inintalise the Ovpn contaner 
 ```
-docker-compose run --rm openvpn ovpn_genconfig -u udp://VPN.SERVERNAME.COM  -C 'AES-256-CBC' -a 'SHA384'
+export SERVERNAME=server.com
+docker-compose run --rm openvpn ovpn_genconfig -u udp://$SERVERNAME  -C 'AES-256-CBC' -a 'SHA384'
 docker-compose run --rm openvpn ovpn_initpki
 ```
 
@@ -39,4 +39,9 @@ route 192.168.0.0 255.255.0.0 net_gateway
 # Force the trafic to my dns
 dhcp-option DNS 10.5.0.4
 block-outside-dns
+```
+
+You also need to change the port that you are goign to be connecting to to be
+```
+remote servername.com 9751 udp
 ```
