@@ -1,0 +1,75 @@
+version: '3'
+services:
+
+  dns-tls-1:
+    restart: always
+    image: qmcgaw/cloudflare-dns-server
+    container_name: dns-tls-1
+    environment:
+      - VERBOSITY=0
+      - VERBOSITY_DETAILS=0
+      - BLOCK_MALICIOUS=off
+      - LISTENINGPORT=53
+      - PROVIDERS=cloudflare,google
+      - CACHING=off
+    networks:
+      dnsbridge:
+        ipv4_address: 10.5.0.2
+    logging: 
+      driver: none
+
+  dns-tls-2:
+    restart: always
+    image: qmcgaw/cloudflare-dns-server
+    container_name: dns-tls-2
+    environment:
+      - VERBOSITY=0
+      - VERBOSITY_DETAILS=0
+      - BLOCK_MALICIOUS=off
+      - LISTENINGPORT=53
+      - PROVIDERS=cloudflare,google
+      - CACHING=off
+    networks:
+      dnsbridge:
+        ipv4_address: 10.5.0.3
+    logging: 
+      driver: none
+
+  pihole:
+    container_name: pihole
+    image: pihole/pihole
+    dns:
+      - 127.0.0.1
+      - 192.168.1.1
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "80:80/tcp"
+      - "443:443/tcp"
+    cap_add:
+      - NET_ADMIN
+    networks:
+      dnsbridge:
+        ipv4_address: 10.5.0.4
+    environment:
+      ServerIP: 10.5.0.4
+      TZ: Europe/London
+      DNS1: 10.5.0.2
+      DNS2: 10.5.0.3
+    volumes:
+      - 'etc_pihole:/etc/pihole/'
+      - 'etc_dnsmasq:/etc/dnsmasq.d/'
+    restart: always
+    logging:
+      driver: none
+
+networks:
+  dnsbridge:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.5.0.0/16
+
+volumes: 
+  etc_pihole: {}
+  etc_dnsmasq: {}
